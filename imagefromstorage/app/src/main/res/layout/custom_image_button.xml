@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:padding="10dp"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageButton
+        android:id="@+id/custom_image_button_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:padding="0dp"/>
+
+    <TextView
+        android:id="@+id/custom_image_button_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/custom_image_button_image"
+        android:textSize="13dp"
+        android:textColor="#3f3f3f"
+        android:hint="sample image"
+        android:gravity="center" />
+</RelativeLayout>
