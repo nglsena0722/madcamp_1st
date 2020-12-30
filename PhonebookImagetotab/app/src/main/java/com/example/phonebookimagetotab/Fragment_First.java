@@ -1,87 +1,91 @@
-package com.example.allcontacts;
-
-import java.util.ArrayList;
+package com.example.phonebookimagetotab;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.snackbar.Snackbar;
 
-public class MainActivity extends Activity {
+import java.util.ArrayList;
+
+public class Fragment_First extends Fragment {
+    public ViewPager viewPager;
     ListView list;
     LinearLayout ll;
 
     private static final int PERMISSION_REQUEST_READ_CONTACTS = 0;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    public Fragment_First() {
 
-        ll = (LinearLayout) findViewById(R.id.LinearLayout1);
-        list = (ListView) findViewById(R.id.listView1);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_first, container, false);
+        ll = (LinearLayout) view.findViewById(R.id.LinearLayout1);
+        list = (ListView) view.findViewById(R.id.listView1);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         if(checkPermission(Manifest.permission.READ_CONTACTS)) {
-            Log.d("2","dddd checkPermission = true");
             showContactsAsync();
         } else {
-            Log.d("3","dddd checkPermission = false");
             requestReadContactsPermission();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d("2","dddd in onRequestPermissionsResult");
         if(requestCode == PERMISSION_REQUEST_READ_CONTACTS){
-            Log.d("2","dddd ok1");
             if(grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                Log.d("2","dddd ok2");
                 showContactsAsync();
             }
             else{
-                Log.d("2","dddd not ok");
-                Toast.makeText(this, "debug", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "debug", Toast.LENGTH_LONG).show();
             }
         }
     }
 
     private boolean checkPermission(String permission) {
-        Log.d("2","dddd in checkpermission");
-        return ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED;
+        return ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), permission) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestReadContactsPermission() {
-        Log.d("2","dddd in requestReadContactsPermission");
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)) {
-            Log.d("2","dddd yes");
-            Snackbar.make(ll, R.string.read_contacts_access_required, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View V) {
-                            ActivityCompat.requestPermissions(MainActivity.this,
-                                    new String[]{Manifest.permission.READ_CONTACTS},
-                                    PERMISSION_REQUEST_READ_CONTACTS);
-                        }
-                    }).show();
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_CONTACTS)) {
+                Snackbar.make(ll, "연락처를 사용하려면 권한이 필요합니다.", Snackbar.LENGTH_INDEFINITE)
+                        .setAction("확인", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View V) {
+                                requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+                                        PERMISSION_REQUEST_READ_CONTACTS);
+                            }
+                        }).show();
         } else {
-            Log.d("2","dddd No");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_READ_CONTACTS);
+            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSION_REQUEST_READ_CONTACTS);
         }
     }
 
@@ -90,21 +94,19 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPreExecute() {
-            Log.d("2","dddd in onPre");
             // TODO Auto-generated method stub
             super.onPreExecute();
 
-            pd = ProgressDialog.show(MainActivity.this, "Loading Contacts",
+            pd = ProgressDialog.show(getContext(), "Loading Contacts",
                     "Please Wait");
         }
 
         @Override
         protected ArrayList<String> doInBackground(Void... params) {
-            Log.d("2","dddd in doin");
             // TODO Auto-generated method stub
             ArrayList<String> contacts = new ArrayList<String>();
 
-            Cursor c = getContentResolver().query(
+            Cursor c = getContext().getContentResolver().query(
                     ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                     null, null, null);
 
@@ -124,23 +126,20 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onPostExecute(ArrayList<String> contacts) {
-            Log.d("2","dddd in onpost");
             // TODO Auto-generated method stub
             super.onPostExecute(contacts);
 
             pd.cancel();
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                    getApplicationContext(), R.layout.text, contacts);
+                    getActivity().getApplicationContext(), R.layout.text, contacts);
 
             list.setAdapter(adapter);
         }
     }
 
     private void showContactsAsync() {
-        Log.d("2","dddd in showcontacts");
         LoadContactsAsycn lca = new LoadContactsAsycn();
-        Log.d("2","dddd finish load contact");
         lca.execute();
     }
 }
