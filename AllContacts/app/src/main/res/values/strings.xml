@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">All Contacts</string>
-    <string name="read_contacts_access_required">연락처를 사용하려면 권한이 필요합니다.</string>
-    <string name="ok">확인</string>
 </resources>
