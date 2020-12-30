@@ -2,13 +2,11 @@ package com.example.phonebookimagetotab;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +49,7 @@ public class Fragment_First extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(checkPermission(Manifest.permission.READ_CONTACTS)) {
+        if(customCheckPermission(Manifest.permission.READ_CONTACTS)) {
             showContactsAsync();
         } else {
             requestReadContactsPermission();
@@ -70,7 +68,7 @@ public class Fragment_First extends Fragment {
         }
     }
 
-    private boolean checkPermission(String permission) {
+    private boolean customCheckPermission(String permission) {
         return ActivityCompat.checkSelfPermission(getActivity().getApplicationContext(), permission) == PackageManager.PERMISSION_GRANTED;
     }
 
