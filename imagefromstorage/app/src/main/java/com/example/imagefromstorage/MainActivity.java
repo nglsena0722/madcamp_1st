@@ -44,12 +44,6 @@ public class MainActivity extends FragmentActivity {
 
     private static final int PERMISSION_REQUEST_READ_EXTERNAL_STORAGE = 100;
 
-    ProgressDialog pd;
-
-    private RecyclerView recyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager layoutManager;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,14 +127,14 @@ public class MainActivity extends FragmentActivity {
     private void showImage() {
         Image[] images = loadImage();
 
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         recyclerView.setHasFixedSize(true);
 
-        layoutManager = new GridLayoutManager(this, 2);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new ImageAdapter(this, images);
+        RecyclerView.Adapter mAdapter = new ImageAdapter(this, images);
         recyclerView.setAdapter(mAdapter);
     }
 
