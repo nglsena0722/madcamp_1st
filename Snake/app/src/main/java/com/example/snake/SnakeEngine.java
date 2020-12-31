@@ -66,6 +66,9 @@ class SnakeEngine extends SurfaceView{
     // Some paint for our canvas
     private Paint paint;
 
+    private float prevTouchX = 0f;
+    private float prevTouchY = 0f;
+
     public SnakeEngine(Context context, Point size) {
         super(context);
 
@@ -258,38 +261,31 @@ class SnakeEngine extends SurfaceView{
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
+        switch (motionEvent.getActionMasked()) {
+            case MotionEvent.ACTION_DOWN:
+                prevTouchX = motionEvent.getX();
+                prevTouchY = motionEvent.getY();
+                break;
 
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
-                if (motionEvent.getX() >= screenX / 2) {
-                    switch(heading){
-                        case UP:
+                float dx = motionEvent.getX() - prevTouchX;
+                float dy = motionEvent.getY() - prevTouchY;
+
+                if(Math.abs(dx) > Math.abs(dy)) {
+                    if(dx > 0) {
+                        if(heading != Heading.LEFT)
                             heading = Heading.RIGHT;
-                            break;
-                        case RIGHT:
-                            heading = Heading.DOWN;
-                            break;
-                        case DOWN:
+                    } else {
+                        if(heading != Heading.RIGHT)
                             heading = Heading.LEFT;
-                            break;
-                        case LEFT:
-                            heading = Heading.UP;
-                            break;
                     }
                 } else {
-                    switch(heading){
-                        case UP:
-                            heading = Heading.LEFT;
-                            break;
-                        case LEFT:
+                    if(dy > 0) {
+                        if(heading != Heading.UP)
                             heading = Heading.DOWN;
-                            break;
-                        case DOWN:
-                            heading = Heading.RIGHT;
-                            break;
-                        case RIGHT:
+                    } else {
+                        if(heading != Heading.DOWN)
                             heading = Heading.UP;
-                            break;
                     }
                 }
         }
