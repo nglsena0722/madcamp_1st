@@ -23,7 +23,7 @@
         android:text="권한을 허용해야 앱 이용이 가능합니다."
         android:textSize="20sp"
         android:gravity="center_horizontal"
-        android:textColor="#000000"/>
+        android:textColor="#FFBBBB"/>
 
     <LinearLayout
         android:layout_width="match_parent"

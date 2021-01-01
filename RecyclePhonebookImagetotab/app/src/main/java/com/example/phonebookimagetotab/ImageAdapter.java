@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +56,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
             @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
             @Override
             public void onClick(View view) {
+                Log.d("2","dddd in onclick");
                 main.zoomImageFromThumb(holder.imageButton, uri);
             }
         });

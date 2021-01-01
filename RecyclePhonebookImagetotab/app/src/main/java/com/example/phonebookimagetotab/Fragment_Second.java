@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class Fragment_Second extends Fragment {
-
+    Fragment_Second main;
     public ViewPager viewPager;
 
     private Animator currentAnimator;
@@ -82,7 +83,7 @@ public class Fragment_Second extends Fragment {
             else{
                 LayoutInflater mInflater =
                         (LayoutInflater) getActivity().getSystemService(getContext().LAYOUT_INFLATER_SERVICE);
-                mInflater.inflate(R.layout.rejectaction, getActivity().findViewById(android.R.id.content), true);
+                mInflater.inflate(R.layout.rejectaction, getActivity().findViewById(R.id.container2), true);
                 Toast.makeText(getContext(), "debug", Toast.LENGTH_LONG).show();
             }
         }
@@ -93,6 +94,7 @@ public class Fragment_Second extends Fragment {
     }
 
     private void requestReadExternalStoragePermission() {
+        Log.d("2","dddd frag2");
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
             Snackbar.make(getActivity().findViewById(android.R.id.content), "이미지 갤러리를 사용하려면 권한이 필요합니다.", Snackbar.LENGTH_INDEFINITE)
                     .setAction("확인", new View.OnClickListener() {
@@ -141,11 +143,11 @@ public class Fragment_Second extends Fragment {
     private void showImage() {
         Image[] images = loadImage();
 
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view2);
 
         recyclerView.setHasFixedSize(true);
 
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
         recyclerView.setLayoutManager(layoutManager);
 
         RecyclerView.Adapter mAdapter = new ImageAdapter(this, images);
@@ -154,6 +156,7 @@ public class Fragment_Second extends Fragment {
 
     @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     void zoomImageFromThumb(final View thumbView, Uri uri) {
+        Log.d("2","dddd in zoomimagefromthumb");
         // If there's an animation in progress, cancel it
         // immediately and proceed with this one.
         if (currentAnimator != null) {
@@ -183,7 +186,7 @@ public class Fragment_Second extends Fragment {
         // bounds, since that's the origin for the positioning animation
         // properties (X, Y).
         thumbView.getGlobalVisibleRect(startBounds);
-        getActivity().findViewById(R.id.container)
+        getActivity().findViewById(R.id.container2)
                 .getGlobalVisibleRect(finalBounds, globalOffset);
         startBounds.offset(-globalOffset.x, -globalOffset.y);
         finalBounds.offset(-globalOffset.x, -globalOffset.y);

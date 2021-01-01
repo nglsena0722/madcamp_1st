@@ -25,6 +25,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".SnakeActivity"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+
+            /> <!--액티비티 추가시 <application> 안에 추가해줘야함-->
     </application>
 
 </manifest>

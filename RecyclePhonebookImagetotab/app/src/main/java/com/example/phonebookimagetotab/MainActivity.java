@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.example.phonebookimagetotab.Fragment_First;
@@ -35,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setCustomView(imgView);
 
         imgView= new ImageView(MainActivity.this);
-        imgView.setImageResource(R.drawable.tab_iconfree);
+        imgView.setImageResource(R.drawable.tab_icongame);
         imgView.setPadding(10,10,10,10);
         tabLayout.getTabAt(2).setCustomView(imgView);
 
@@ -45,11 +46,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-    public void setupViewPager(ViewPager viewPager) {
-        adapter.addFragment(new Fragment_First(), "phonebook");
-        adapter.addFragment(new Fragment_Second(), "images");
-        adapter.addFragment(new Fragment_Third(), "free");
-
+        public void setupViewPager(ViewPager viewPager) {
+            adapter.addFragment(new Fragment_First(), "phonebook");
+            adapter.addFragment(new Fragment_Second(), "images");
+            adapter.addFragment(new Fragment_Third(), "free");
+        Log.d("2","dddd before view.pager.setadapter(adapter)");
         viewPager.setAdapter(adapter);
     }
 }

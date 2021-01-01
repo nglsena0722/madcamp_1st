@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +63,7 @@ public class Fragment_First extends Fragment {
             else{
                 LayoutInflater mInflater =
                         (LayoutInflater) getActivity().getSystemService(getContext().LAYOUT_INFLATER_SERVICE);
-                mInflater.inflate(R.layout.rejectaction, getActivity().findViewById(android.R.id.content), true);
+                mInflater.inflate(R.layout.rejectaction, getActivity().findViewById(R.id.container1), true);
                 Toast.makeText(getContext(), "debug", Toast.LENGTH_LONG).show();
             }
         }
@@ -73,6 +74,7 @@ public class Fragment_First extends Fragment {
     }
 
     private void requestReadContactsPermission() {
+        Log.d("2","dddd frag1");
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.READ_CONTACTS)) {
             Snackbar.make(getActivity().findViewById(android.R.id.content), "연락처를 사용하려면 권한이 필요합니다", Snackbar.LENGTH_INDEFINITE)
                     .setAction("확인", new View.OnClickListener() {
@@ -119,7 +121,7 @@ public class Fragment_First extends Fragment {
     private void showContacts() {
         String[] contacts = loadContacts();
 
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view1);
 
         recyclerView.setHasFixedSize(true);
 
