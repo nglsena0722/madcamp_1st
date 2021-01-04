@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -12,9 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
@@ -27,8 +23,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.phonebookimagetotab.R;
-import com.example.phonebookimagetotab.ContactAdapter;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -59,30 +53,17 @@ public class Fragment_First extends Fragment {
         SearchView searchView;
         searchView = (SearchView) getActivity().findViewById(R.id.searchForm);
 
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-//                String[] contacts = loadContacts();
-//                adapter.filter(query, contacts);
-//
-//                RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view1);
-//
-//                recyclerView.setHasFixedSize(true);
-//
-//                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-//                recyclerView.setLayoutManager(layoutManager);
-//
-//                mAdapter = new ContactAdapter(this, contacts);
-//                recyclerView.setAdapter(mAdapter);
-//                mAdapter.filter(query);
+                mAdapter.filter(query);
                 Toast.makeText(getContext(), "검색" + query, Toast.LENGTH_SHORT).show();
                 return true;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
-                return false;
+                mAdapter.filter(newText);
+                return true;
             }
         });
 
