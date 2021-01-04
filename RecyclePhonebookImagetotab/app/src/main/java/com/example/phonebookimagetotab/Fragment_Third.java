@@ -18,7 +18,7 @@ import com.example.phonebookimagetotab.R;
 
 public class Fragment_Third extends Fragment {
     public ViewPager viewPager;
-    static final String[] LIST_MENU = {"Snake game", "LIST2", "LIST3", "LIST4"} ;
+    static final String[] LIST_MENU = {"Snake game", "Minesweeper", "LIST3", "LIST4"} ;
 
     public Fragment_Third(){
 
@@ -45,10 +45,12 @@ public class Fragment_Third extends Fragment {
                 Toast.makeText(getContext(), LIST_MENU[position] + " will start.", Toast.LENGTH_SHORT).show();
                 switch (position) {
                     case 0:
-                        Intent intent = new Intent(getActivity(), SnakeActivity.class);
-                        startActivity(intent);
+                        Intent intent1 = new Intent(getActivity(), SnakeActivity.class);
+                        startActivity(intent1);
                         break;
                     case 1:
+                        Intent intent2 = new Intent(getActivity(), MineActivity.class);
+                        startActivity(intent2);
                         break;
                     case 2:
                         break;

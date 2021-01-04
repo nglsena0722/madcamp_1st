@@ -5,9 +5,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.widget.Toast;
 
 import java.util.Random;
 import java.util.Timer;
@@ -31,6 +33,7 @@ class SnakeEngine extends SurfaceView {
     // How long is the snake
     private int snakeLength;
     private final int MAX_SNAKE_LENGTH = 200;
+    private int bestrecord = 1;
 
     // Where is Bob hiding?
     private int bobX;
@@ -104,6 +107,7 @@ class SnakeEngine extends SurfaceView {
 
                 if (detectDeath()) {
                     //start again
+                    if (snakeLength > bestrecord) bestrecord = snakeLength;
                     newGame();
                 }
 
@@ -140,7 +144,7 @@ class SnakeEngine extends SurfaceView {
 
     public void newGame() {
         // Start with a single snake segment
-        snakeLength = 1;
+        snakeLength = 190;
         snakeXs[0] = numBlocksWide / 2;
         snakeYs[0] = numBlocksHigh / 2;
 
@@ -157,6 +161,7 @@ class SnakeEngine extends SurfaceView {
         //  Got him!
         // Increase the size of the snake
         snakeLength++;
+        if (snakeLength > bestrecord) bestrecord = snakeLength;
         //replace Bob
         // This reminds me of Edge of Tomorrow. Oneday Bob will be ready!
         spawnBob();
@@ -210,7 +215,6 @@ class SnakeEngine extends SurfaceView {
                 dead = true;
             }
         }
-
         return dead;
     }
 
@@ -234,7 +238,9 @@ class SnakeEngine extends SurfaceView {
             // Scale the HUD text
             paint.setTextSize(90);
             //Length text - snake 색깔
-            canvas.drawText("Length:" + snakeLength, 10, 70, paint);
+            canvas.drawText("Best record:" + bestrecord, 10, 70, paint);
+            canvas.drawText("Length:" + snakeLength, 10, 140, paint);
+
 
             // Draw the snake one block at a time
             for (int i = 0; i < snakeLength; i++) {

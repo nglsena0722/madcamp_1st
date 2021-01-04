@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
@@ -14,10 +15,12 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -32,21 +35,56 @@ import java.util.ArrayList;
 
 public class Fragment_First extends Fragment {
     public ViewPager viewPager;
+    public ContactAdapter mAdapter;
     private static final int PERMISSION_REQUEST_READ_CONTACTS = 0;
 
     public Fragment_First() {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
+
+
         return view;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.HONEYCOMB)
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        SearchView searchView;
+        searchView = (SearchView) getActivity().findViewById(R.id.searchForm);
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+//                String[] contacts = loadContacts();
+//                adapter.filter(query, contacts);
+//
+//                RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recycler_view1);
+//
+//                recyclerView.setHasFixedSize(true);
+//
+//                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+//                recyclerView.setLayoutManager(layoutManager);
+//
+//                mAdapter = new ContactAdapter(this, contacts);
+//                recyclerView.setAdapter(mAdapter);
+//                mAdapter.filter(query);
+                Toast.makeText(getContext(), "검색" + query, Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
 
         if(customeCheckPermission(Manifest.permission.READ_CONTACTS)) {
             showContacts();
@@ -128,7 +166,7 @@ public class Fragment_First extends Fragment {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        RecyclerView.Adapter mAdapter = new ContactAdapter(this, contacts);
+        mAdapter = new ContactAdapter(this, contacts);
         recyclerView.setAdapter(mAdapter);
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.phonebookimagetotab"
     android:versionCode="1"
     android:versionName="1.0">
@@ -7,16 +8,19 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_adzv"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_adzv_round"
         android:supportsRtl="true"
+        android:requestLegacyExternalStorage = "true"
         android:theme="@style/Theme.PhonebookImageToTab">
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -27,8 +31,26 @@
         </activity>
         <activity android:name=".SnakeActivity"
             android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name=".MineActivity"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
+            tools:ignore="Instantiatable"></activity>
+        <provider
+            android:authorities="com.example.phonebookimagetotab"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:requestLegacyExternalStorage = "true"
+            android:grantUriPermissions="true">
 
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+
+        </provider>
+        <meta-data
+            android:name="android.support.PARENT_ACTIVITY"
+            android:value=".MainActivity" />
             /> <!--액티비티 추가시 <application> 안에 추가해줘야함-->
     </application>
 

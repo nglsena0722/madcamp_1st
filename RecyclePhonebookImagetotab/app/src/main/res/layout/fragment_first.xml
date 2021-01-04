@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/container1"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -10,15 +11,17 @@
          from the bounds of the thumbnail button above, to its final laid-out
          bounds.
          -->
+    <androidx.appcompat.widget.SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchForm"></androidx.appcompat.widget.SearchView>
     <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/recycler_view1"
+        android:layout_below="@+id/searchForm"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-
-
-
-</FrameLayout>
+</RelativeLayout>
 
 

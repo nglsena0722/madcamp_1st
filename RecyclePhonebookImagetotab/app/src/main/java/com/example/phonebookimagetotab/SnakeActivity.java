@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,8 +34,7 @@ public class SnakeActivity extends Activity {
 
         // Create a new instance of the SnakeEngine class
         snakeEngine = new SnakeEngine(this, size);
-
-        // Make snakeEngine the view of the Activity
+            // Make snakeEngine the view of the Activity
         setContentView(snakeEngine);
     }
 
