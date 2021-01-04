@@ -18,7 +18,7 @@ import com.example.phonebookimagetotab.R;
 
 public class Fragment_Third extends Fragment {
     public ViewPager viewPager;
-    static final String[] LIST_MENU = {"Snake game", "Minesweeper", "LIST3", "LIST4"} ;
+    static final String[] LIST_MENU = {"Snake game", "Minesweeper", "Breakout", "LIST4"} ;
 
     public Fragment_Third(){
 
@@ -53,6 +53,8 @@ public class Fragment_Third extends Fragment {
                         startActivity(intent2);
                         break;
                     case 2:
+                        Intent intent3 = new Intent(getActivity(), BreakoutActivity.class);
+                        startActivity(intent3);
                         break;
                     case 3:
                         break;

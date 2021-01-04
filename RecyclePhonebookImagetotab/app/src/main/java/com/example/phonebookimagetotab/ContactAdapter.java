@@ -2,6 +2,7 @@ package com.example.phonebookimagetotab;
 
 import android.os.Build;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -65,4 +66,6 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
         }
         notifyDataSetChanged();
     }
+
+
 }
