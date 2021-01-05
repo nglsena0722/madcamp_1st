@@ -144,7 +144,7 @@ class SnakeEngine extends SurfaceView {
 
     public void newGame() {
         // Start with a single snake segment
-        snakeLength = 190;
+        snakeLength = 1;
         snakeXs[0] = numBlocksWide / 2;
         snakeYs[0] = numBlocksHigh / 2;
 
