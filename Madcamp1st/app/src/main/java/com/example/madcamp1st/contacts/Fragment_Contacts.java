@@ -2,8 +2,10 @@ package com.example.madcamp1st.contacts;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
@@ -42,6 +44,7 @@ public class Fragment_Contacts extends Fragment {
     private void onPermissionGranted() {
         getActivity().findViewById(R.id.reject_contacts).setVisibility(View.INVISIBLE);
         getActivity().findViewById(R.id.relativeLayout_contacts).setVisibility(View.VISIBLE);
+        getActivity().findViewById(R.id.floatingActionButton1).setVisibility(View.VISIBLE);
 
         showContacts();
 
@@ -58,6 +61,14 @@ public class Fragment_Contacts extends Fragment {
             public boolean onQueryTextChange(String newText) {
                 mAdapter.filter(newText);
                 return true;
+            }
+        });
+
+        getActivity().findViewById(R.id.floatingActionButton1).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_INSERT, Uri.parse("content://contacts/people"));
+                startActivity(intent);
             }
         });
     }

@@ -413,6 +413,8 @@ public class Fragment_Images extends Fragment {
                 e.printStackTrace();
                 result = "File close Error";
             }
+
+            showImage();
         }
     }
 

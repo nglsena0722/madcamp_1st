@@ -18,7 +18,7 @@ import com.example.madcamp1st.games.minesweeper.MinesweeperActivity;
 import com.example.madcamp1st.games.snake.SnakeActivity;
 
 public class Fragment_Games extends Fragment {
-    static final String[] LIST_MENU = {"Snake game", "Minesweeper", "Breakout", "LIST4"} ;
+    static final String[] LIST_MENU = {"Snake game", "Minesweeper", "Breakout"} ;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,8 +46,6 @@ public class Fragment_Games extends Fragment {
                     case 2:
                         intent = new Intent(getActivity(), BreakoutActivity.class);
                         startActivity(intent);
-                        break;
-                    case 3:
                         break;
                 }
             }
