@@ -1,21 +1,19 @@
 package com.example.madcamp1st;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.viewpager.widget.ViewPager;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.ImageView;
 
-import com.example.madcamp1st.contacts.Fragment_Contacts;
-import com.example.madcamp1st.games.Fragment_Games;
-import com.example.madcamp1st.images.Fragment_Images;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends FragmentActivity {
     private final int REQUEST_CODE_BOTH = 0;
     private final int REQUEST_CODE_READ_CONTACTS = 1;
     private final int REQUEST_CODE_READ_EXTERNAL_STORAGE = 2;
@@ -30,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(!permissionReadContacts && !permissionReadExternalStorage)
             requestPermissions(new String[]{
-                    Manifest.permission.READ_CONTACTS,
-                    Manifest.permission.READ_EXTERNAL_STORAGE},
+                            Manifest.permission.READ_CONTACTS,
+                            Manifest.permission.READ_EXTERNAL_STORAGE},
                     REQUEST_CODE_BOTH);
         else if(!permissionReadContacts)
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, REQUEST_CODE_READ_CONTACTS);
@@ -48,30 +46,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createView() {
-        ViewPager mViewPager = (ViewPager) findViewById(R.id.viewPager_main);
-        SectionPageAdapter adapter = new SectionPageAdapter(getSupportFragmentManager());
+        ViewPager2 mViewPager = findViewById(R.id.viewPager_main);
+        SectionPageAdapter adapter = new SectionPageAdapter(this);
 
-        adapter.addFragment(new Fragment_Contacts());
-        adapter.addFragment(new Fragment_Images());
-        adapter.addFragment(new Fragment_Games());
         mViewPager.setAdapter(adapter);
 
-        TabLayout tabLayout =(TabLayout) findViewById(R.id.tabLayout_main);
-        tabLayout.setupWithViewPager(mViewPager);
-
-        ImageView imgView= new ImageView(this);
-        imgView.setImageResource(R.drawable.tab_icon_contacts);
-        imgView.setPadding(10,10,10,10);
-        tabLayout.getTabAt(0).setCustomView(imgView);
-
-        imgView= new ImageView(this);
-        imgView.setImageResource(R.drawable.tab_icon_images);
-        imgView.setPadding(10,10,10,10);
-        tabLayout.getTabAt(1).setCustomView(imgView);
-
-        imgView= new ImageView(this);
-        imgView.setImageResource(R.drawable.tab_icon_games);
-        imgView.setPadding(10,10,10,10);
-        tabLayout.getTabAt(2).setCustomView(imgView);
+        TabLayout tabLayout = findViewById(R.id.tabLayout_main);
+        new TabLayoutMediator(tabLayout, mViewPager, (tab, position) -> {
+            ImageView imgView = new ImageView(this);
+            switch (position) {
+                case 0:
+                    imgView.setImageResource(R.drawable.tab_icon_contacts);
+                    break;
+                case 1:
+                    imgView.setImageResource(R.drawable.tab_icon_images);
+                    break;
+                case 2:
+                    imgView.setImageResource(R.drawable.tab_icon_games);
+            }
+            imgView.setPadding(10, 10, 10, 10);
+            tab.setCustomView(imgView);
+        }).attach();
     }
 }

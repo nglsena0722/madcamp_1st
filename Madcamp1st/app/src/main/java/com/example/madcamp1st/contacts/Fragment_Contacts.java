@@ -21,16 +21,21 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.madcamp1st.MainActivity;
 import com.example.madcamp1st.R;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import java.util.ArrayList;
 
 public class Fragment_Contacts extends Fragment {
+    private View mView;
     private ContactAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_contacts, container, false);
+        mView = inflater.inflate(R.layout.fragment_contacts, container, false);
+        return mView;
     }
 
     @Override
@@ -38,17 +43,35 @@ public class Fragment_Contacts extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
-            onPermissionGranted();
+            onPermissionGranted_contacts();
+        else{
+            view.findViewById(R.id.button_request_contacts).setOnClickListener(v -> {
+                PermissionListener permissionListener = new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+                        onPermissionGranted_contacts();
+                    }
+
+                    @Override
+                    public void onPermissionDenied(ArrayList<String> deniedPermissions) { }
+                };
+
+                TedPermission.with(getContext())
+                        .setPermissionListener(permissionListener)
+                        .setPermissions(Manifest.permission.READ_CONTACTS)
+                        .check();
+            });
+        }
     }
 
-    private void onPermissionGranted() {
-        getActivity().findViewById(R.id.reject_contacts).setVisibility(View.INVISIBLE);
-        getActivity().findViewById(R.id.relativeLayout_contacts).setVisibility(View.VISIBLE);
-        getActivity().findViewById(R.id.floatingActionButton1).setVisibility(View.VISIBLE);
+    private void onPermissionGranted_contacts() {
+        mView.findViewById(R.id.reject_contacts).setVisibility(View.INVISIBLE);
+        mView.findViewById(R.id.relativeLayout_contacts).setVisibility(View.VISIBLE);
+        mView.findViewById(R.id.floatingActionButton_contacts).setVisibility(View.VISIBLE);
 
         showContacts();
 
-        SearchView searchView = (SearchView) getActivity().findViewById(R.id.searchView_contacts);
+        SearchView searchView = mView.findViewById(R.id.searchView_contacts);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -64,18 +87,16 @@ public class Fragment_Contacts extends Fragment {
             }
         });
 
-        getActivity().findViewById(R.id.floatingActionButton1).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_INSERT, Uri.parse("content://contacts/people"));
-                startActivity(intent);
-            }
+        mView.findViewById(R.id.floatingActionButton_contacts).setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_INSERT, Uri.parse("content://contacts/people"));
+            startActivity(intent);
+            //showContacts();
         });
     }
 
-    private String[] loadContacts() {
+    private Contact[] loadContacts() {
         ProgressDialog pd;
-        ArrayList<String> contacts = new ArrayList<String>();
+        ArrayList<Contact> contacts = new ArrayList<>();
 
         pd = ProgressDialog.show(getContext(), "Loading Contacts", "Please Wait");
 
@@ -94,18 +115,18 @@ public class Fragment_Contacts extends Fragment {
             String contactName = c.getString(nameColumn);
             String phNumber = c.getString(numberColumn);
 
-            contacts.add(contactName + ":" + phNumber);
+            contacts.add(new Contact(contactName, phNumber));
         }
         c.close();
         pd.cancel();
 
-        return contacts.toArray(new String[0]);
+        return contacts.toArray(new Contact[0]);
     }
 
     private void showContacts() {
-        String[] contacts = loadContacts();
+        Contact[] contacts = loadContacts();
 
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView_contacts);
+        RecyclerView recyclerView = mView.findViewById(R.id.recyclerView_contacts);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);

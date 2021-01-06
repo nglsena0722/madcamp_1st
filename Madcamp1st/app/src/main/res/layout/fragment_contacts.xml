@@ -30,7 +30,7 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton1"
+            android:id="@+id/floatingActionButton_contacts"
             android:layout_width="74dp"
             android:layout_height="78dp"
             android:layout_alignParentEnd="true"
@@ -58,11 +58,18 @@
 
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="43dp"
+            android:layout_height="wrap_content"
             android:text="권한을 허용해야 연락처 이용이 가능합니다."
             android:textSize="20sp"
             android:gravity="center_horizontal"
             android:textColor="#FFBBBB"/>
+
+        <Button
+            android:id="@+id/button_request_contacts"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="권한 요청"/>
     </LinearLayout>
 
 </FrameLayout>

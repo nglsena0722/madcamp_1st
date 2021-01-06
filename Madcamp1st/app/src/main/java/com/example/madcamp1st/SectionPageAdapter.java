@@ -1,30 +1,36 @@
 package com.example.madcamp1st;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.madcamp1st.contacts.Fragment_Contacts;
+import com.example.madcamp1st.games.Fragment_Games;
+import com.example.madcamp1st.images.Fragment_Images;
 
-public class SectionPageAdapter extends FragmentPagerAdapter {
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-
-    public void addFragment(Fragment fragment){
-        mFragmentList.add(fragment);
+public class SectionPageAdapter extends FragmentStateAdapter {
+    public SectionPageAdapter(FragmentActivity fa) {
+        super(fa);
     }
 
-    public SectionPageAdapter(FragmentManager fm){
-        super(fm);
+    @NonNull
+    @Override
+    public Fragment createFragment(int position) {
+        switch(position) {
+            case 0:
+                return new Fragment_Contacts();
+            case 1:
+                return new Fragment_Images();
+            case 2:
+                return new Fragment_Games();
+        }
+
+        return new Fragment();
     }
 
     @Override
-    public Fragment getItem(int position) {
-        return mFragmentList.get(position);
-    }
-
-    @Override
-    public int getCount() {
-        return mFragmentList.size();
+    public int getItemCount() {
+        return 3;
     }
 }

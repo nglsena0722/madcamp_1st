@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Intent;
@@ -40,6 +41,11 @@ import com.example.madcamp1st.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.multi.BaseMultiplePermissionsListener;
+import com.karumi.dexter.listener.single.BasePermissionListener;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -54,6 +60,8 @@ import java.util.Locale;
 import static android.os.Environment.DIRECTORY_PICTURES;
 
 public class Fragment_Images extends Fragment {
+    private View mView;
+
     private Animator currentAnimator;
     private int shortAnimationDuration;
 
@@ -66,12 +74,12 @@ public class Fragment_Images extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.fragment_images, container, false);
+        mView = inflater.inflate(R.layout.fragment_images, container, false);
 
         // Retrieve and cache the system's default "short" animation time.
         shortAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        return view;
+        return mView;
     }
 
     @Override
@@ -79,11 +87,24 @@ public class Fragment_Images extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
-            onPermissionGranted();
+            onPermissionGranted_images();
+        else{
+            view.findViewById(R.id.button_request_images).setOnClickListener(v -> {
+                Dexter.withContext(getContext())
+                        .withPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .withListener(new BasePermissionListener(){
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
+                                onPermissionGranted_images();
+                            }
+                        }).check();
+            });
+        }
     }
 
-    private void onPermissionGranted() {
-        getActivity().findViewById(R.id.reject_images).setVisibility(View.INVISIBLE);
+    private void onPermissionGranted_images() {
+        mView.findViewById(R.id.reject_images).setVisibility(View.INVISIBLE);
+        mView.findViewById(R.id.floatingActionButton_images).setVisibility(View.VISIBLE);
 
         showImage();
         cameraPermission();
@@ -92,54 +113,62 @@ public class Fragment_Images extends Fragment {
     private void cameraPermission() {
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
                 && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
-            onPermissionGranted_camera();
+            onPermissionGranted_camera(false);
         else {
             PermissionListener permissionListener_camera = new PermissionListener() {
                 @Override
                 public void onPermissionGranted() {
-                    onPermissionGranted_camera();
+                    onPermissionGranted_camera(false);
                 }
 
                 @Override
                 public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+                    mView.findViewById(R.id.floatingActionButton_images).setOnClickListener(v -> {
+                        Dexter.withContext(getContext())
+                                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                                .withListener(new BaseMultiplePermissionsListener() {
+                                    @Override
+                                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                        if(report.areAllPermissionsGranted())
+                                            onPermissionGranted_camera(true);
+                                    }
+                                }).check();
+                    });
                 }
             };
 
             TedPermission.with(getContext())
                     .setPermissionListener(permissionListener_camera)
-                    .setRationaleMessage("사진촬영을 사용하려면 권한을 허용해야 합니다다")
                     .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
                     .check();
         }
     }
 
-    private void onPermissionGranted_camera() {
-        getActivity().findViewById(R.id.floatingActionButton_images).setVisibility(View.VISIBLE);
-
+    private void onPermissionGranted_camera(boolean doAction) {
         // 사진 저장 후 미디어 스캐닝을 돌려줘야 갤러리에 반영됨.
         mMediaScanner = MediaScanner.getInstance(getActivity().getApplicationContext());
-        FloatingActionButton fab = getActivity().findViewById(R.id.floatingActionButton_images);
+        FloatingActionButton fab = mView.findViewById(R.id.floatingActionButton_images);
         fab.setOnClickListener(new FABClickListener());
 
-        getActivity().findViewById(R.id.floatingActionButton_images).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                    File photoFile = null;
-                    try {
-                        photoFile = createImageFile();
-                    } catch (IOException e) {
-                    }
+        mView.findViewById(R.id.floatingActionButton_images).setOnClickListener(v -> {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                File photoFile = null;
+                try {
+                    photoFile = createImageFile();
+                } catch (IOException e) {
+                }
 
-                    if (photoFile != null) {
-                        photoUri = FileProvider.getUriForFile(getActivity().getApplicationContext(), getActivity().getPackageName(), photoFile);
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                    }
+                if (photoFile != null) {
+                    photoUri = FileProvider.getUriForFile(getActivity().getApplicationContext(), getActivity().getPackageName(), photoFile);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
                 }
             }
         });
+
+        if(doAction)
+            mView.findViewById(R.id.floatingActionButton_images).performClick();
     }
 
     class FABClickListener implements View.OnClickListener{
@@ -183,7 +212,7 @@ public class Fragment_Images extends Fragment {
     private void showImage() {
         Image[] images = loadImage();
 
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView_images);
+        RecyclerView recyclerView = mView.findViewById(R.id.recyclerView_images);
 
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         recyclerView.setLayoutManager(layoutManager);
@@ -200,7 +229,7 @@ public class Fragment_Images extends Fragment {
         }
 
         // Load the high-resolution "zoomed-in" image.
-        final ImageView expandedImageView = (ImageView) getActivity().findViewById(
+        final ImageView expandedImageView = mView.findViewById(
                 R.id.imageView_expanded);
 
         try {
@@ -222,7 +251,7 @@ public class Fragment_Images extends Fragment {
         // bounds, since that's the origin for the positioning animation
         // properties (X, Y).
         thumbView.getGlobalVisibleRect(startBounds);
-        getActivity().findViewById(R.id.frameLayout_images)
+        mView.findViewById(R.id.frameLayout_images)
                 .getGlobalVisibleRect(finalBounds, globalOffset);
         startBounds.offset(-globalOffset.x, -globalOffset.y);
         finalBounds.offset(-globalOffset.x, -globalOffset.y);
@@ -354,7 +383,7 @@ public class Fragment_Images extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == getActivity().RESULT_OK) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == Activity.RESULT_OK) {
             Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
             //Bitmap bitmap = ((BitmapDrawable) BitmapFactory.decodeFile(imageFilePath).getDrawable()).getBitmap();
             ExifInterface exif = null;

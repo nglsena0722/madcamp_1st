@@ -25,7 +25,7 @@ public class Fragment_Games extends Fragment {
         View view = inflater.inflate(R.layout.fragment_games,container,false);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1, LIST_MENU);
 
-        ListView listview = (ListView) view.findViewById(R.id.listView_games);
+        ListView listview = view.findViewById(R.id.listView_games);
         listview.setAdapter(adapter);
 
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
