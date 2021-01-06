@@ -39,8 +39,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.madcamp1st.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
@@ -115,32 +113,17 @@ public class Fragment_Images extends Fragment {
                 && ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
             onPermissionGranted_camera(false);
         else {
-            PermissionListener permissionListener_camera = new PermissionListener() {
-                @Override
-                public void onPermissionGranted() {
-                    onPermissionGranted_camera(false);
-                }
-
-                @Override
-                public void onPermissionDenied(ArrayList<String> deniedPermissions) {
-                    mView.findViewById(R.id.floatingActionButton_images).setOnClickListener(v -> {
-                        Dexter.withContext(getContext())
-                                .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-                                .withListener(new BaseMultiplePermissionsListener() {
-                                    @Override
-                                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                                        if(report.areAllPermissionsGranted())
-                                            onPermissionGranted_camera(true);
-                                    }
-                                }).check();
-                    });
-                }
-            };
-
-            TedPermission.with(getContext())
-                    .setPermissionListener(permissionListener_camera)
-                    .setPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
-                    .check();
+            mView.findViewById(R.id.floatingActionButton_images).setOnClickListener(v -> {
+                Dexter.withContext(getContext())
+                        .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.CAMERA)
+                        .withListener(new BaseMultiplePermissionsListener() {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                if (report.areAllPermissionsGranted())
+                                    onPermissionGranted_camera(true);
+                            }
+                        }).check();
+            });
         }
     }
 

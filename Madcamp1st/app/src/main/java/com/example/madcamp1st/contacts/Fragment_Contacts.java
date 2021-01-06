@@ -21,10 +21,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.madcamp1st.MainActivity;
 import com.example.madcamp1st.R;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.single.BasePermissionListener;
 
 import java.util.ArrayList;
 
@@ -46,20 +46,14 @@ public class Fragment_Contacts extends Fragment {
             onPermissionGranted_contacts();
         else{
             view.findViewById(R.id.button_request_contacts).setOnClickListener(v -> {
-                PermissionListener permissionListener = new PermissionListener() {
-                    @Override
-                    public void onPermissionGranted() {
-                        onPermissionGranted_contacts();
-                    }
-
-                    @Override
-                    public void onPermissionDenied(ArrayList<String> deniedPermissions) { }
-                };
-
-                TedPermission.with(getContext())
-                        .setPermissionListener(permissionListener)
-                        .setPermissions(Manifest.permission.READ_CONTACTS)
-                        .check();
+                Dexter.withContext(getContext())
+                        .withPermission(Manifest.permission.READ_CONTACTS)
+                        .withListener(new BasePermissionListener(){
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse response) {
+                                onPermissionGranted_contacts();
+                            }
+                        }).check();
             });
         }
     }

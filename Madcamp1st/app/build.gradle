@@ -36,6 +36,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'gun0912.ted:tedpermission:2.0.0'
     implementation 'com.karumi:dexter:6.2.2'
 }
